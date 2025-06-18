@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Google Classroom Hide Author",
+  "version": "1.0",
+  "description": "Google Classroomの投稿から投稿者名を非表示にします。",
+  "content_scripts": [
+    {
+      "matches": ["*://classroom.google.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
