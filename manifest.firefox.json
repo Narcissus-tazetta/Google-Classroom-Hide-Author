@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "Google Classroom Hide Author",
+    "version": "1.0.0",
+    "description": "Google Classroomの投稿者名・年度・ワークシート名を自動的に非表示にします",
+    "permissions": ["https://classroom.google.com/*"],
+    "content_scripts": [
+        {
+            "matches": ["https://classroom.google.com/*"],
+            "js": ["content.js"],
+            "run_at": "document_end"
+        }
+    ],
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "classroom-hide-author@example.com",
+            "strict_min_version": "109.0"
+        }
+    }
+}

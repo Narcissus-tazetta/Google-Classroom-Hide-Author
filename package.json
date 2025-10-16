@@ -1,0 +1,21 @@
+{
+    "name": "google-classroom-hide-author",
+    "version": "1.0.0",
+    "description": "Google Classroomの投稿者名・年度・ワークシート名を自動的に非表示にする拡張機能",
+    "scripts": {
+        "build": "npm run build:chrome && npm run build:firefox",
+        "build:chrome": "npm run compile && node scripts/build-chrome.js",
+        "build:firefox": "npm run compile && node scripts/build-firefox.js",
+        "compile": "tsc",
+        "watch": "tsc --watch",
+        "clean": "rm -rf dist build"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.268",
+        "@types/webextension-polyfill": "^0.10.7",
+        "typescript": "^5.4.5"
+    },
+    "dependencies": {
+        "webextension-polyfill": "^0.12.0"
+    }
+}
