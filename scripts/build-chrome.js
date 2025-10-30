@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
+const esbuild = require("esbuild");
 
 const buildDir = path.join(__dirname, "../build/chrome");
 const distDir = path.join(__dirname, "../dist");
@@ -12,7 +13,15 @@ if (!fs.existsSync(buildDir)) {
 
 fs.copyFileSync(path.join(__dirname, "../manifest.chrome.json"), path.join(buildDir, "manifest.json"));
 
-fs.copyFileSync(path.join(distDir, "content.js"), path.join(buildDir, "content.js"));
+esbuild.buildSync({
+    entryPoints: [path.join(__dirname, "../src/content.ts")],
+    bundle: true,
+    outfile: path.join(buildDir, "content.js"),
+    platform: "browser",
+    target: "chrome90",
+    minify: false,
+    sourcemap: false,
+});
 
 if (fs.existsSync(path.join(__dirname, "../icons"))) {
     const iconsDir = path.join(buildDir, "icons");

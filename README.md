@@ -2,110 +2,101 @@
 
 Google Classroom の投稿者名・年度・ワークシート名を自動的に非表示にするブラウザ拡張機能です。
 
+##　この文章は AI が書きました
+
 ## 主な機能
 
 -   **投稿者名の非表示**: 「〇〇さんが〜」という投稿者名を自動で非表示
 -   **年度表記の削除**: 「2025 年*」「2025*」「2025＿」などの年度表記を自動で除去
 -   **ワークシート名の削除**: 「\_ワークシート」「ワークシート」を自動で除去
--   **柔軟な文字対応**: 半角・全角アンダースコアやスペースにも対応
 
-## 対応ブラウザ
+# Google Classroom Hide Author
 
--   Google Chrome / Chromium 系ブラウザ
--   Mozilla Firefox
+Google Classroom の UI に対して以下の改善・補助を行うブラウザ拡張です。
 
-## インストール方法
+主な機能:
 
-### Chrome
+-   投稿者名・冗長表記の簡潔化（「〇〇さんが〜」を要約表示）
+-   Classroom のトピック / ドロップダウンに検索フィルタを追加（日本語/ローマ字対応の部分一致）
+-   カスタム読み辞書で漢字語句を任意の読み（ひらがな）にマッピングして検索精度を向上
 
-1. [Releases](https://github.com/Narcissus-tazetta/Google-Classroom-Hide-Author/releases)から最新の`chrome.zip`をダウンロード
-2. 解凍してフォルダを任意の場所に配置
-3. Chrome で`chrome://extensions/`を開く
-4. 右上の「デベロッパーモード」を有効化
-5. 「パッケージ化されていない拡張機能を読み込む」をクリック
-6. 解凍したフォルダを選択
+対応ブラウザ: Chrome/Chromium 系、Firefox
 
-### Firefox
+---
 
-1. [Releases](https://github.com/Narcissus-tazetta/Google-Classroom-Hide-Author/releases)から最新の`.xpi`ファイルをダウンロード
-2. Firefox で`about:addons`を開く
-3. 歯車アイコンをクリックし、「ファイルからアドオンをインストール」を選択
-4. ダウンロードした`.xpi`ファイルを選択
+## 開発／ビルド
 
-## 開発者向け
-
-### ビルド方法
+このリポジトリは Bun / TypeScript / esbuild ベースでビルドします。ローカルでのビルド手順:
 
 ```bash
-# 依存パッケージのインストール
-npm install
+# 依存インストール
+bun install
 
-# Chrome・Firefox両方をビルド
-npm run build
+# Chrome 用ビルド（content script をバンドルして build/chrome に出力）
+bun run build:chrome
 
-# Chrome版のみビルド
-npm run build:chrome
+# Firefox 用ビルド
+bun run build:firefox
 
-# Firefox版のみビルド
-npm run build:firefox
-
-# TypeScriptの監視モード
-npm run watch
+# 変更を監視しながらビルド（必要に応じて）
+bun run watch
 ```
 
-ビルド後のファイルは`build/chrome`と`build/firefox`に生成されます。また、各ブラウザ用の zip ファイルも`build/`ディレクトリに作成されます。
+ビルド後の成果物は `build/chrome` / `build/firefox` に作成されます。
 
-### ローカルでのテスト方法
+---
 
-#### Chrome
-
-1. `bun run build:chrome`を実行
-2. Chrome で`chrome://extensions/`を開く
-3. 「デベロッパーモード」を有効化
-4. 「パッケージ化されていない拡張機能を読み込む」をクリック
-5. `build/chrome`フォルダを選択
-
-#### Firefox
-
-1. `bun run build:firefox`を実行
-2. Firefox で`about:debugging#/runtime/this-firefox`を開く
-3. 「一時的なアドオンを読み込む」をクリック
-4. `build/firefox/manifest.json`を選択
-
-### プロジェクト構造
+## 開発者向けファイル構成（主要部分のみ）
 
 ```
-classroom/
-├── src/
-│   └── content.ts          # メインのコンテンツスクリプト
-├── scripts/
-│   ├── build-chrome.js     # Chromeビルドスクリプト
-│   └── build-firefox.js    # Firefoxビルドスクリプト
-├── manifest.chrome.json    # Chrome用マニフェスト
-├── manifest.firefox.json   # Firefox用マニフェスト
-├── package.json
-└── tsconfig.json
+src/
+├── content.ts                    # エントリポイント（各モジュールを起動）
+├── ClassroomTextProcessor.ts     # 投稿テキストの整形（投稿者名の要約化）
+├── DropdownSearchEnhancer.ts     # ドロップダウン検索の実装（フィルタ挿入）
+├── reading-dictionary.ts         # 漢字→読み（ひらがな）カスタム辞書
+├── constants.ts                  # セレクタや定数
+└── types.ts                      # 型定義
 ```
 
-## 使い方
+### 主要ポイント
 
-インストール後、Google Classroom のページを開くだけで自動的に動作します。特別な設定は不要です。
+-   ドロップダウン検索は `DropdownSearchEnhancer` が DOM を監視して開いたドロップダウン（オーバーレイ型）にのみ検索ボックスを挿入します。
+-   漢字 → 読みは軽量な `reading-dictionary.ts`（手動マッピング）で補い、wanakana を使ってひらがな ↔ ローマ字の変換と検索バリアント生成を行っています。
+
+---
+
+## 使い方（ローカルでのテスト）
+
+1. `bun run build:chrome` を実行
+2. Chrome を開き `chrome://extensions/` を開く
+3. 「デベロッパーモード」を有効化して `build/chrome` を読み込む
+
+Firefox のローカルテストは `bun run build:firefox` の出力を一時アドオンとして読み込んでください。
+
+---
+
+## 読み辞書の編集方法
+
+簡単なキー → 読み（ひらがな）のマッピングを `src/reading-dictionary.ts` に記載しています。例:
+
+```ts
+export const readingDictionary = {
+    進路授業: "しんろじゅぎょう",
+    学問入門講座: "がくもんにゅうもんこうざ",
+};
+```
+
+辞書を追加・編集したらビルドして拡張を再読み込みしてください。小規模な単語集で実用性を担保する設計です（大型の形態素解析ライブラリはブラウザでは重く互換性の問題が出やすいため採用していません）。
+
+---
 
 ## 注意事項
 
--   本拡張は Google Classroom の UI 変更により動作しなくなる可能性があります
--   不具合や改善要望は[Issues](https://github.com/Narcissus-tazetta/Google-Classroom-Hide-Author/issues)からご報告ください
+-   Google Classroom の DOM / クラス名は予告なく変わるため、将来的に動作が外れる可能性があります。
+-   `reading-dictionary.ts` を編集すれば特定の漢字語句に対して確実に検索結果を出すようにできます。
+
+---
 
 ## ライセンス
 
-[LICENSE](LICENSE)を参照してください。
-
-## この文章は AI が生成しました
-
-## 変更履歴
-
-### v1.0.0 (2025-10-15)
-
--   初回リリース
--   TypeScript 化、Chrome/Firefox 両対応
--   投稿者名・年度・ワークシート名の自動削除機能
+LICENSE を参照してください。

@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Google Classroom Hide Author",
-    "version": "1.0.0",
-    "description": "Google Classroomの投稿者名・年度・ワークシート名を自動的に非表示にします",
+    "name": "Classroom Polish",
+    "version": "1.0.1",
+    "description": "Google ClassroomのUIの改善します",
     "permissions": [],
     "host_permissions": ["https://classroom.google.com/*"],
     "content_scripts": [

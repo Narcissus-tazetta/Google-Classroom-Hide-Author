@@ -13,9 +13,11 @@
     "devDependencies": {
         "@types/chrome": "^0.0.268",
         "@types/webextension-polyfill": "^0.10.7",
-        "typescript": "^5.4.5"
+        "esbuild": "^0.25.11",
+        "typescript": "^5.9.3"
     },
     "dependencies": {
+        "wanakana": "^5.3.1",
         "webextension-polyfill": "^0.12.0"
     }
 }
