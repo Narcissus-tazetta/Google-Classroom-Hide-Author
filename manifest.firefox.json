@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Classroom Polish",
+    "name": "Classroom Enhancer",
     "version": "1.0.1",
     "description": "Google ClassroomのUIの改善します",
     "permissions": ["https://classroom.google.com/*"],

@@ -64,4 +64,23 @@ try {
     // ignore errors here
 }
 
-console.log("Chrome build completed successfully! (no zip created)");
+// Create a zip named Classroom-Enhancer.zip containing the chrome build
+try {
+    const zipName = "Classroom-Enhancer.zip";
+    const zipPath = path.join(rootDir, "build", zipName);
+    if (fs.existsSync(zipPath)) {
+        fs.unlinkSync(zipPath);
+        console.log(`Removed existing zip: build/${zipName}`);
+    }
+
+    // Use the system zip tool to archive the chrome build dir
+    // Change to the build directory and zip the 'chrome' folder
+    const cwd = path.join(rootDir, "build");
+    const cmd = `zip -r "${zipName}" "chrome"`;
+    execSync(cmd, { cwd, stdio: "inherit" });
+    console.log(`Created zip: build/${zipName}`);
+} catch (e) {
+    console.error("Failed to create Classroom-Enhancer.zip:", e);
+}
+
+console.log("Chrome build completed successfully! (zip created if possible)");

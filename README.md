@@ -1,4 +1,4 @@
-# Classroom Polish
+# Classroom Enhancer
 
 Google Classroom の UI に対して以下の改善・補助を行うブラウザ拡張です。
 
